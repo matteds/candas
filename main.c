@@ -32,6 +32,32 @@ char* file_content_to_buffer(char* file_path)
 
 }
 
+char** str_split_to_array(char* input_string, const char sep[2])
+{
+    char* token;
+    char** output_array = malloc(2 * sizeof(char*));
+    int capacity = 2;
+    int count = 0;
+
+    token = strtok(input_string, sep);
+    while (token != NULL)
+    {
+        if (count >= capacity)
+        {
+            capacity *= 2;
+            output_array = realloc(output_array, capacity * sizeof(char*));
+        }
+
+        output_array[count] = strdup(token);
+        count++;
+        token = strtok(NULL, sep);
+    }
+    output_array[count] = NULL;
+
+    return output_array;
+    
+}
+
 int read_csv(char* file_path)
 {   
     char* line;
@@ -43,6 +69,14 @@ int read_csv(char* file_path)
     // Save file content in a buffer
     char* buffer = file_content_to_buffer(file_path);
 
+    char** lines = str_split_to_array(buffer, new_line_sep);
+    /*
+    int count = 100;
+    for (int i = 0; i < count; i++) {
+        printf("%s", lines[i]);
+    }
+
+    
     // Split buffer for each new line
     line = strtok(buffer, new_line_sep);
 
@@ -61,8 +95,7 @@ int read_csv(char* file_path)
         free(tmp_buffer);
         line = strtok(NULL, new_line_sep);
     }
-
-    
+    */
 
     free(buffer);
 
